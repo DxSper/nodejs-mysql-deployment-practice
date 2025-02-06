@@ -5,6 +5,7 @@ require('dotenv').config(); //
 const app = express();
 const port = 3000;
 
+// Database conf
 const dbConfig = {
   host: process.env.DB_HOST, // Use environment variables
   user: process.env.DB_USER,
