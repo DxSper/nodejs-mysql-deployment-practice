@@ -1,0 +1,24 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Changez cela si votre branche principale a un autre nom
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build --file Dockerfile dockdesper/my-node-app:latest .
+
+      - name: Push Docker image
+        run: docker push dockdesper/my-node-app:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
