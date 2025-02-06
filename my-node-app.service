@@ -1,0 +1,15 @@
+[Unit]
+Description=My Node.js App
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/local/bin/docker-compose -f /root/Documents/ex2docker/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /root/Documents/ex2docker/docker-compose.yml down
+WorkingDirectory=/root/Documents/ex2docker
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
