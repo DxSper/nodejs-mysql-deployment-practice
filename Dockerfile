@@ -1,21 +1,32 @@
-# Utiliser l'image officielle de Node.js comme image de base
-FROM node:20.13.1
+# Étape 1 : Construction de l'application
+FROM node:20.13.1 AS builder
 
-# Définir le répertoire de travail dans le conteneur
-WORKDIR /usr/src/app
+# Définir le répertoire de travail
+WORKDIR /app
 
-# Copier le fichier package.json et package-lock.json
+# Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
 # Installer les dépendances
-RUN npm install dotenv
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copier le reste de l'application
+# Copier le reste des fichiers de l'application
 COPY . .
 
-# Exposer le port sur lequel l'application écoute
+# Construire l'application Next.js
+RUN npm run build
+
+# Étape 2 : Exécution de l'application
+FROM node:20.13.1 AS runner
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers construits depuis l'étape de construction
+COPY --from=builder /app ./
+
+# Exposer le port sur lequel l'application va écouter
 EXPOSE 3000
 
 # Commande pour démarrer l'application
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
